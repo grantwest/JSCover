@@ -423,6 +423,8 @@ public class HttpServer extends Thread {
                 handleHead(httpRequest);
             } else if (httpMethod.equals("POST")) {
                 handlePost(httpRequest);
+            } else if(httpMethod.equals("OPTIONS")) {
+                handleOptions();
             } else
               throw new UnsupportedOperationException("No support for "+httpMethod);
         } catch (Exception e) {
@@ -467,6 +469,16 @@ public class HttpServer extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected void handleOptions() {
+        pw.print(format("HTTP/1.0 %s\n", HTTP_STATUS.HTTP_OK));
+        pw.write(format("Server: JSCover/%s\n", version));
+        pw.print("Access-Control-Allow-Origin: *\n");
+        pw.print("Access-Control-Allow-Methods: POST, GET, OPTIONS\n");
+        pw.print("Access-Control-Max-Age: 1000\n");
+        pw.print("Access-Control-Allow-Headers: Content-Type\n");
+        pw.flush();
     }
 
     protected void handleGet(HttpRequest request) throws IOException {
