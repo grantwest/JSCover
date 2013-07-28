@@ -367,12 +367,14 @@ public class ConfigurationForFS extends Configuration {
     public static final String FUNCTION_PREFIX = "--no-function";
     public static final String JS_VERSION_PREFIX = "--js-version=";
     public static final String HYBRID_MODE_PREFIX = "--hybrid-mode";
+    public static final String JSCOVER_SERVER_URI_PREFIX = "--jscover-server-uri=";
 
     private boolean showHelp;
     private boolean invalid;
     private boolean includeBranch = true;
     private boolean includeFunction = true;
     private boolean hybridMode = false;
+    private String jscoverServerUri = "";
     private final Set<String> noInstruments = new HashSet<String>();
     private final Set<Pattern> noInstrumentRegs = new HashSet<Pattern>();
     private final Set<String> excludes = new HashSet<String>();
@@ -401,6 +403,10 @@ public class ConfigurationForFS extends Configuration {
 
     public boolean isHybridMode() {
         return hybridMode;
+    }
+
+    public String jscoverServerUri() {
+        return jscoverServerUri;
     }
 
     public File getSrcDir() {
@@ -451,6 +457,8 @@ public class ConfigurationForFS extends Configuration {
                 configuration.includeFunction = false;
             } else if (arg.equals(HYBRID_MODE_PREFIX)) {
                 configuration.hybridMode = true;
+            } else if (arg.startsWith(JSCOVER_SERVER_URI_PREFIX)) {
+                configuration.jscoverServerUri = arg.substring(JSCOVER_SERVER_URI_PREFIX.length());
             } else if (arg.startsWith(NO_INSTRUMENT_PREFIX)) {
                 String uri = arg.substring(NO_INSTRUMENT_PREFIX.length());
                 if (uri.startsWith("/"))
