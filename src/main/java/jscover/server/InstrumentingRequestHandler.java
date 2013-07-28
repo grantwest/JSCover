@@ -347,7 +347,9 @@ import jscover.instrument.InstrumenterService;
 import jscover.instrument.UnloadedSourceProcessor;
 import jscover.report.JSONDataSaver;
 import jscover.report.ScriptCoverageCount;
+import jscover.util.FileScanner;
 import jscover.util.IoService;
+import jscover.util.IoUtils;
 import jscover.util.Logger;
 
 import java.io.File;
@@ -389,6 +391,9 @@ public class InstrumentingRequestHandler extends HttpServer {
             try {
                 List<ScriptCoverageCount> unloadJSData = null;
                 if (configuration.isIncludeUnloadedJS()) {
+                    if(configuration.isHybridMode()) {
+                        addToUris(request);
+                    }
                     unloadJSData = unloadedSourceProcessor.getEmptyCoverageData(uris.keySet());
                     for (ScriptCoverageCount scriptLinesAndSource : unloadJSData) {
                         File src = new File(configuration.getDocumentRoot(), scriptLinesAndSource.getUri());
@@ -469,5 +474,18 @@ public class InstrumentingRequestHandler extends HttpServer {
             proxyService.handleProxyHead(request, os);
         else
             super.handleHead(request);
+    }
+
+    protected void addToUris(HttpRequest request) {
+        String jsonData = ioUtils.toString(request.getInputStream());
+        FileScanner fileScanner = new FileScanner(configuration);
+        IoUtils ioUtils = IoUtils.getInstance();
+        String path;
+        for (File file : fileScanner.getFiles(uris.keySet())) {
+            path = ioUtils.getRelativePath(file, configuration.getDocumentRoot());
+            if (jsonData.contains(path)){
+                uris.put(path, null);
+            }
+        }
     }
 }
