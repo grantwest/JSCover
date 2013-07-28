@@ -369,7 +369,7 @@ public class IoService {
             String reportJS = generateJSCoverageReportJS();
             ioUtils.copy(reportJS, new File(destDir, "jscoverage.js"));
         } else {
-            String jsCoverageJS = generateJSCoverageJs();
+            String jsCoverageJS = generateJSCoverageJs(false);
             ioUtils.copy(jsCoverageJS, new File(destDir, "jscoverage.js"));
         }
 
@@ -379,18 +379,24 @@ public class IoService {
     }
 
     private String generateJSCoverageReportJS() {
-        return generateJSCoverageJs() + "\njscoverage_isReport = true;";
+        return generateJSCoverageJs(false) + "\njscoverage_isReport = true;";
     }
 
-    public String generateJSCoverageServerJS() {
-        return generateJSCoverageJs() + "\njscoverage_isServer = true;";
+    public String generateJSCoverageServerJS(boolean autosend) {
+        return generateJSCoverageJs(autosend) + "\njscoverage_isServer = true;";
     }
 
-    private String generateJSCoverageJs() {
+    private String generateJSCoverageJs(boolean autosend) {
         String mainJS = ioUtils.loadFromClassPath("/jscoverage.js");
         String branchJS = ioUtils.loadFromClassPath("/jscoverage-branch.js");
         String commonJS = ioUtils.loadFromClassPath("/jscoverage-common.js");
-        return mainJS + commonJS + branchJS;
+        if(autosend) {
+            String autosendJS = ioUtils.loadFromClassPath("/autosend.js");
+            return autosendJS + mainJS + commonJS + branchJS;
+        }
+        else {
+            return mainJS + commonJS + branchJS;
+        }
     }
 
     public String generateJSCoverageHtml(String version) {
