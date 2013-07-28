@@ -368,10 +368,10 @@ public class InstrumenterService {
         return sourceProcessor.processSourceForServer(source);
     }
 
-    public void instrumentJSForFileSystem(CompilerEnvirons compilerEnvirons, File srcFile, File dest, String uri, boolean includeBranch, boolean includeFunction) {
+    public void instrumentJSForFileSystem(CompilerEnvirons compilerEnvirons, File srcFile, File dest, String uri, boolean includeBranch, boolean includeFunction, boolean hybridMode, String jscoverServerUri) {
         SourceProcessor sourceProcessor = new SourceProcessor(compilerEnvirons, "/" + uri, includeBranch, includeFunction);
         String source = ioUtils.loadFromFileSystem(srcFile);
-        String jsInstrumented = sourceProcessor.processSourceForFileSystem(source);
+        String jsInstrumented = sourceProcessor.processSourceForFileSystem(source, hybridMode, jscoverServerUri);
         ioUtils.copy(jsInstrumented, dest);
     }
 }

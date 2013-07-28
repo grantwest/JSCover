@@ -374,7 +374,7 @@ public class ConfigurationForFS extends Configuration {
     private boolean includeBranch = true;
     private boolean includeFunction = true;
     private boolean hybridMode = false;
-    private String jscoverServerUri = "";
+    private String jscoverServerUri = "http://localhost:80";
     private final Set<String> noInstruments = new HashSet<String>();
     private final Set<Pattern> noInstrumentRegs = new HashSet<Pattern>();
     private final Set<String> excludes = new HashSet<String>();

@@ -370,7 +370,7 @@ public class InstrumenterIntegrationTest {
         String source = ioUtils.loadFromClassPath("/" + fileName);
         instrumenter = new SourceProcessor(compilerEnv, fileName, true, true);
 
-        String instrumentedSource = instrumenter.processSourceForFileSystem(source);
+        String instrumentedSource = instrumenter.processSourceForFileSystem(source, false, "");
 
         String expectedSource = ioUtils.loadFromClassPath("/test-instrumented-file-system.js");
         // assertThat(instrumentedSource, equalTo(expectedSource));

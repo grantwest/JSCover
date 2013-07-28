@@ -386,18 +386,24 @@ class SourceProcessor {
 
     public String processSourceForServer(String source) {
         String reportJS = ioUtils.loadFromClassPath("/report.js");
-        return reportJS + processSource(uri, source);
+        return reportJS + processSource(uri, source, false, "");
     }
 
-    public String processSourceForFileSystem(String source) {
-        return processSource(uri, source);
+    public String processSourceForFileSystem(String source, boolean autoload, String jscoverServerUri) {
+        return processSource(uri, source, autoload, jscoverServerUri);
     }
 
-    protected String processSource(String sourceURI, String source) {
+    protected String processSource(String sourceURI, String source, boolean autoload, String jscoverServerUri) {
         String headerJS = ioUtils.loadFromClassPath("/header.js");
         String commonJS = ioUtils.loadFromClassPath("/jscoverage-common.js");
         String branchJS = ioUtils.loadFromClassPath("/jscoverage-branch.js");
-        return branchJS + commonJS + headerJS + processSourceWithoutHeader(sourceURI, source);
+        if(autoload) {
+            String autoloadJS = ioUtils.loadFromClassPath("/autoload.js").replace("^[jscover-server-uri]", jscoverServerUri);
+            return autoloadJS + branchJS + commonJS + headerJS + processSourceWithoutHeader(sourceURI, source);
+        }
+        else {
+            return branchJS + commonJS + headerJS + processSourceWithoutHeader(sourceURI, source);
+        }
     }
 
     protected String processSourceWithoutHeader(String source) {
