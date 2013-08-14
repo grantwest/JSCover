@@ -436,7 +436,7 @@ public class InstrumentingRequestHandler extends HttpServer {
         String uri = request.getPath();
         try {
             if (uri.equals("/jscoverage.js")) {
-                sendResponse(HTTP_STATUS.HTTP_OK, request.getMime(), ioService.generateJSCoverageServerJS());
+                sendResponse(HTTP_STATUS.HTTP_OK, request.getMime(), ioService.generateJSCoverageServerJS(configuration.isHybridMode()));
             } else if (uri.startsWith("/jscoverage.html")) {
                 String reportHTML = ioService.generateJSCoverageHtml(configuration.getVersion());
                 sendResponse(HTTP_STATUS.HTTP_OK, request.getMime(), reportHTML);
